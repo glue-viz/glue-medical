@@ -19,7 +19,7 @@ except (IOError, ImportError):
 with open('glue_medical/version.py') as infile:
     exec(infile.read())
 
-setup(name='glue_medical',
+setup(name='glue-medical',
       version=__version__,
       description='Plugin for glue to support medical data',
       long_description=LONG_DESCRIPTION,
