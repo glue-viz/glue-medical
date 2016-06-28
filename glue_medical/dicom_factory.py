@@ -118,7 +118,7 @@ def dicom_reader(source):
 
         # If we are here, the shapes of the DICOM files didn't match, so we
         # simply return one Data object per DICOM file.
-        return [Data(array=arrays[label], label=label) for label in arrays]
+        return [Data(array=arrays[label], label=label) for label in labels]
 
     else:
 
