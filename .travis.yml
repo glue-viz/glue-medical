@@ -1,0 +1,25 @@
+language: c
+
+sudo: false
+
+notifications:
+  email: false
+
+env:
+  global:
+    - SETUP_XVFB=True
+    - CONDA_CHANNELS="conda-forge"
+    - CONDA_DEPENDENCIES="glueviz pytest mock requests"
+    - PIP_DEPENDENCIES="pydicom"
+  matrix:
+    - PYTHON_VERSION=2.7
+    - PYTHON_VERSION=3.5
+    - PYTHON_VERSION=2.7 PIP_DEPENDENCIES="pydicom https://github.com/glue-viz/glue/archive/master.zip" PIP_DEPENDENCIES_FLAGS="--upgrade --no-deps"
+    - PYTHON_VERSION=3.5 PIP_DEPENDENCIES="pydicom https://github.com/glue-viz/glue/archive/master.zip" PIP_DEPENDENCIES_FLAGS="--upgrade --no-deps"
+
+install:
+  - git clone git://github.com/astrofrog/ci-helpers.git
+  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+
+script:
+  - py.test glue_medical

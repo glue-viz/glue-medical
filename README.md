@@ -2,7 +2,7 @@ Experimental Glue medical plugin
 ==============================
 
 [![Build Status](https://travis-ci.org/glue-viz/glue-medical.svg)](https://travis-ci.org/glue-viz/glue-medical?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/???/branch/master?svg=true)](https://ci.appveyor.com/project/astrofrog/glue-medical/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/kerfkvju3umn75q0/branch/master?svg=true)](https://ci.appveyor.com/project/astrofrog/glue-medical/branch/master)
 
 Requirements
 ------------
