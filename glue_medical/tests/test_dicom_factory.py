@@ -27,7 +27,11 @@ def test_dicom(tmpdir):
 
     # Because the paths contain unicode, and extractall can mess with it,
     # we get the next directory level programmatically
-    base_dir = glob.glob(os.path.join(base_dir, '*'))[0]
+    new_base_dir = glob.glob(os.path.join(base_dir, '*'))[0]
+    base_dir = os.path.join(base_dir, 'datasets')
+    
+    # We now rename it to avoid issues
+    os.rename(new_base_dir, base_dir)
 
     assert not is_dicom(base_dir)
     assert is_dicom(os.path.join(base_dir, 'T1-3D-FFE-C - 801'))
