@@ -28,5 +28,6 @@ setup(name='glue_medical',
       author_email='',
       packages = find_packages(),
       package_data={},
-      entry_points=entry_points
+      entry_points=entry_points,
+      install_requires=['numpy', 'glueviz', 'pydicom']
     )
