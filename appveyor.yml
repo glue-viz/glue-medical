@@ -13,15 +13,14 @@ environment:
 
       CONDA_CHANNELS: "conda-forge"
       CONDA_DEPENDENCIES: "glueviz pytest mock requests"
-      PIP_DEPENDENCIES: "pydicom"
 
   matrix:
       - PYTHON_VERSION: "2.7"
       - PYTHON_VERSION: "3.5"
       - PYTHON_VERSION: "2.7"
-        PIP_DEPENDENCIES: "pydicom https://github.com/glue-viz/glue/archive/master.zip"
+        PIP_DEPENDENCIES: "https://github.com/glue-viz/glue/archive/master.zip"
       - PYTHON_VERSION: "3.5"
-        PIP_DEPENDENCIES: "pydicom https://github.com/glue-viz/glue/archive/master.zip"
+        PIP_DEPENDENCIES: "https://github.com/glue-viz/glue/archive/master.zip"
         
 platform:
     -x64
@@ -31,6 +30,7 @@ install:
     - "powershell ci-helpers/appveyor/install-miniconda.ps1"
     - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
     - "activate test"
+    - pip install pydicom
 
 build: false
 
