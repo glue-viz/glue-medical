@@ -11,19 +11,26 @@ Note that this plugin requires [glue](http://glueviz.org/) to be installed -
 see [this page](http://glueviz.org/en/latest/installation.html) for
 instructions on installing glue.
 
-In addition, this plugin requires the
-[pydicom](http://pydicom.readthedocs.io/en/stable/) package to be installed.
-This is easily installed with::
+In addition, this plugin requires the [GDCM](http://gdcm.sourceforge.net/) and 
+[pydicom](http://pydicom.readthedocs.io/en/stable/) packages to be installed.
+If you are using conda, you can easily install these with:
+
+    conda install -c conda-forge gdcm pydicom
+
+If you **don't** use conda, you can install pydicom with:
 
     pip install pydicom
 
-and it will also be installed automatically when you install this plugin (see
-below).
+GDCM is a little harder to install, and you can find instructions
+[here](http://gdcm.sourceforge.net/wiki/index.php/Main_Page). GDCM is not
+strictly required for the plugin to work - but it is needed for some
+compressed DICOM formats.
 
 Installing
 ----------
 
-To install the latest developer version from the git repository, you can do:
+To install the latest developer version of the plugin from the git
+repository, you can do:
 
     pip install https://github.com/glue-viz/glue-medical/archive/master.zip
 

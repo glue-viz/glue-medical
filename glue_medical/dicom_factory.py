@@ -3,9 +3,13 @@ from __future__ import absolute_import, division, print_function
 import os
 import glob
 
-import dicom
+try:
+    import pydicom
+except ImportError:
+    import dicom as pydicom
 import numpy as np
 
+from glue.logger import logger
 from glue.core.data import Data
 from glue.config import data_factory
 
@@ -39,7 +43,7 @@ def dicom_label(filename):
     if present. We don't strip off any other extensions in case they are part
     of the name and not actually an extension.
     """
-    label = os.path.basename(filename)
+    label = os.path.basename(os.path.normpath(filename))
     if label.endswith('.dcm'):
         label = label[:-4]
     return label
@@ -79,8 +83,11 @@ def dicom_reader(source):
         arrays = {}
         for filename in glob.glob(os.path.join(source, '*')):
             if is_dicom_file(filename):
-                ds = dicom.read_file(filename)
+                logger.info("Reading DICOM data from {0}".format(filename))
+                ds = pydicom.read_file(filename)
                 arrays[dicom_label(filename)] = ds.pixel_array
+            else:
+                logger.info("Not a DICOM file: {0}".format(filename))
 
         # If there are no DICOM files, we raise an error, and if there is one
         # then we are done!
@@ -89,7 +96,7 @@ def dicom_reader(source):
             raise Exception("No DICOM files found in directory: {0}".format(source))
         elif len(arrays) == 1:
             label = list(arrays.keys())[0]
-            return Data(array=arrays[label], label=label)
+            return [Data(array=arrays[label], label=label)]
 
         # We now check whether all the shapes of the DICOM files are the same,
         # and if so, we merge them into a single file.
@@ -114,7 +121,7 @@ def dicom_reader(source):
             # scan will start at the top of e.g. the body and move downwards.
             array = array[::-1]
 
-            return Data(array=array, label=os.path.basename(source))
+            return [Data(array=array, label=dicom_label(source))]
 
         # If we are here, the shapes of the DICOM files didn't match, so we
         # simply return one Data object per DICOM file.
@@ -122,7 +129,7 @@ def dicom_reader(source):
 
     else:
 
-        ds = dicom.read_file(source)
-        data = Data(array=ds.pixel_array, label=dicom_label(source))
+        ds = pydicom.read_file(source)
+        data = [Data(array=ds.pixel_array, label=dicom_label(source))]
 
     return data

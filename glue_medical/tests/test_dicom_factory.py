@@ -37,10 +37,10 @@ def test_dicom(tmpdir):
     assert is_dicom(os.path.join(base_dir, 'T1-3D-FFE-C - 801'))
     assert is_dicom(os.path.join(base_dir, 'T1-3D-FFE-C - 801', 'IM-0001-0054.dcm'))
 
-    data = dicom_reader(os.path.join(base_dir, 'T1-3D-FFE-C - 801'))
+    data = dicom_reader(os.path.join(base_dir, 'T1-3D-FFE-C - 801'))[0]
     assert data.shape == (100, 256, 256)
 
-    data = dicom_reader(os.path.join(base_dir, 'T1-3D-FFE-C - 801', 'IM-0001-0054.dcm'))
+    data = dicom_reader(os.path.join(base_dir, 'T1-3D-FFE-C - 801', 'IM-0001-0054.dcm'))[0]
     assert data.shape == (256, 256)
 
     hete_dir = os.path.join(tmpdir.strpath, 'heterogeneous')
