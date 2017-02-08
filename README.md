@@ -2,7 +2,7 @@ Experimental Glue medical plugin
 ==============================
 
 [![Build Status](https://travis-ci.org/glue-viz/glue-medical.svg)](https://travis-ci.org/glue-viz/glue-medical?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/kerfkvju3umn75q0/branch/master?svg=true)](https://ci.appveyor.com/project/astrofrog/glue-medical/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/2yu53cb15ifilio6/branch/master?svg=true)](https://ci.appveyor.com/project/glue-viz/glue-medical/branch/master)
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ Note that this plugin requires [glue](http://glueviz.org/) to be installed -
 see [this page](http://glueviz.org/en/latest/installation.html) for
 instructions on installing glue.
 
-In addition, this plugin requires the [GDCM](http://gdcm.sourceforge.net/) and 
+In addition, this plugin requires the [GDCM](http://gdcm.sourceforge.net/) and
 [pydicom](http://pydicom.readthedocs.io/en/stable/) packages to be installed.
 If you are using conda, you can easily install these with:
 
