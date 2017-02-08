@@ -15,16 +15,8 @@ In addition, this plugin requires the [GDCM](http://gdcm.sourceforge.net/) and
 [pydicom](http://pydicom.readthedocs.io/en/stable/) packages to be installed.
 If you are using conda, you can easily install these with:
 
-    conda install -c conda-forge gdcm pydicom
-
-If you **don't** use conda, you can install pydicom with:
-
-    pip install pydicom
-
-GDCM is a little harder to install, and you can find instructions
-[here](http://gdcm.sourceforge.net/wiki/index.php/Main_Page). GDCM is not
-strictly required for the plugin to work - but it is needed for some
-compressed DICOM formats.
+    conda install -c conda-forge gdcm
+    pip install https://github.com/darcymason/pydicom/archive/master.zip
 
 Installing
 ----------
