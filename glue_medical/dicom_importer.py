@@ -2,8 +2,9 @@
 # be confusing anyway), we add an 'Import datasets as slices' plugin. In
 # future, this could be generalized to support other formats.
 
+from qtpy import QtGui
+
 from glue.config import importer
-from glue.external.qt import QtGui
 from glue.utils.qt import messagebox_on_error
 
 from .dicom_factory import dicom_reader
@@ -29,5 +30,5 @@ def import_dicom_directory_as_slices():
         return []
 
     directory = dialog.selectedFiles()
-    
+
     return load(directory[0])
