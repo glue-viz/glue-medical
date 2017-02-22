@@ -81,7 +81,7 @@ def dicom_reader(source):
         # one, or more DICOM datasets.
 
         arrays = {}
-        for filename in glob.glob(os.path.join(source, '*')):
+        for filename in sorted(glob.glob(os.path.join(source, '*'))):
             if is_dicom_file(filename):
                 logger.info("Reading DICOM data from {0}".format(filename))
                 ds = pydicom.read_file(filename)
