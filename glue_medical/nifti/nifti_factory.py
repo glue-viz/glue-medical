@@ -76,7 +76,7 @@ def nifti_reader(filepath):
     # print(matrix)
 
     # We now transpose the array so that it has the expected Numpy axis order
-    # array = array.transpose()
+    array = array.transpose()
 
     # Set up the coordinate object using the matrix - for this we keep the
     # matrix in the original order (as well as the axis labels)
