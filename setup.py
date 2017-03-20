@@ -9,12 +9,8 @@ entry_points = """
 glue_medical=glue_medical:setup
 """
 
-try:
-    import pypandoc
-    LONG_DESCRIPTION = pypandoc.convert('README.md', 'rst')
-except (IOError, ImportError):
-    with open('README.md') as infile:
-        LONG_DESCRIPTION = infile.read()
+with open('README.rst') as infile:
+    LONG_DESCRIPTION = infile.read()
 
 with open('glue_medical/version.py') as infile:
     exec(infile.read())
@@ -27,7 +23,7 @@ setup(name='glue-medical',
       author='',
       author_email='',
       packages = find_packages(),
-      package_data={},
+      package_data={'glue_medical.tests':['data/*', 'data/*/*']},
       entry_points=entry_points,
       install_requires=['numpy', 'glueviz', 'pydicom']
     )
