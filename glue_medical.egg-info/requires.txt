@@ -1,0 +1,4 @@
+numpy
+glueviz
+pydicom
+nibabel

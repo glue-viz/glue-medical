@@ -52,6 +52,13 @@ def nifti_reader(filepath):
     axis_labels = ['Axial', 'Coronal', 'Saggital']
     array = nifti_data.get_data()
 
+    # Add axis labels as necessary. Assume 4D Niftis are 3D + time, although this may not be a valid assumption.
+    if array.ndim == 4:
+        axis_labels += ['Time']
+    elif array.ndim > 4:
+        for i in xrange(4, array.ndim + 1):
+            axis_labels += ['Axis' + str(i)]
+
     # NIFTI files are stored with the array indices transposed from the usual
     # Numpy convention of having the first dimension as the last index. But
     # before we transpose the data, we should go through and check whether
@@ -66,8 +73,10 @@ def nifti_reader(filepath):
             matrix[-1, :] += array.shape[idx] * matrix[idx, :]
             array = flip(array, idx)
 
+    # print(matrix)
+
     # We now transpose the array so that it has the expected Numpy axis order
-    array = array.transpose()
+    # array = array.transpose()
 
     # Set up the coordinate object using the matrix - for this we keep the
     # matrix in the original order (as well as the axis labels)

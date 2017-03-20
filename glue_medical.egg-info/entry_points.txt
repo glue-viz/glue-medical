@@ -1,0 +1,3 @@
+
+[glue.plugins]
+glue_medical=glue_medical:setup
