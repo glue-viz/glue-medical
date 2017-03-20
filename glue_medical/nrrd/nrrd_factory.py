@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 import os
 import glob
 
-from ...external.nrrd import
+from ..external import nrrd
 import numpy as np
 
 from glue.logger import logger
@@ -12,13 +12,12 @@ from glue.config import data_factory
 from ..medical_coordinates import Coordinates4DMatrix
 
 
-__all__ = ['is_nifti_file', 'nifti_reader']
+__all__ = ['is_nrrd_file', 'nrrd_reader']
 
 
 def is_nrrd_file(filename):
     """
-    Given that nifti files generall only have two file extensions, checking
-    their validity is merely a matter of checking for those extensions.
+    There are actually two nrrd extensions, but one may required a header -- follow up.
     """
     try:
         if os.path.isdir(filename):
@@ -50,14 +49,18 @@ def nrrd_reader(filepath):
     Reads in a NIFTI file. Uses an affine matrix extracted from nibabel to perform coordinate changes.
     """
 
-    nifti_data = nib.load(filepath)
-    matrix = nifti_data.affine
+    nrrd_data, nrrd_header = nrrd.read(filepath)
+    
+    # Placeholder until I can figure out how to decode NRRD header.
+    matrix = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
+    # matrix = nifti_data.affine
+    
     axis_labels = ['Saggital','Coronal','Axial']
-    array = nifti_data.get_data()
+    array = nrrd_data
 
     coords = Coordinates4DMatrix(matrix, axis_labels)
 
-    data = [Data(label=nifti_label(filepath))]
+    data = [Data(label=nrrd_label(filepath))]
 
     data[0].affine = matrix
     data[0].coords = coords
