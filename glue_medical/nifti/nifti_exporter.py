@@ -6,10 +6,13 @@ from glue.core import Subset
 from glue.config import data_exporter
 
 
+from ..utils import reverse_glue_affine
+
+
 __all__ = []
 
 
-@data_exporter(label='NIFTI Label', extension=['nii', 'nii.gz'])
+@data_exporter(label='NIFTI (.nii, .nii.gz)', extension=['nii', 'nii.gz'])
 def nifti_writer(data, filename):
     """
     Write a dataset or a subset to a nifti file.
@@ -41,6 +44,7 @@ def nifti_writer(data, filename):
             values[~mask] = 0
             values[mask] = 1
 
-        nifti_affine = data.affine
-        otuput_nifti = nib.Nifti1Image(values, nifti_affine)
-        nib.save(otuput_nifti, filename)
+        nifti_affine = data.export_affine
+        nifti_values = reverse_glue_affine(values, nifti_affine)
+        output_nifti = nib.Nifti1Image(nifti_values, nifti_affine)
+        nib.save(output_nifti, filename)

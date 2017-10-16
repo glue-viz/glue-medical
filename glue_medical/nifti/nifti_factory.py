@@ -3,11 +3,12 @@ from __future__ import absolute_import, division, print_function
 import os
 
 import nibabel as nib
+import numpy as np
 
 from glue.core.data import Data
 from glue.config import data_factory
 from ..medical_coordinates import Coordinates4DMatrix
-from ..utils import flip
+from ..utils import flip, create_glue_affine
 
 __all__ = ['is_nifti_file', 'nifti_reader']
 
@@ -42,50 +43,44 @@ def nifti_label(filename):
     identifier=is_nifti_file,
     priority=100,
 )
+
 def nifti_reader(filepath):
     """
     Reads in a NIFTI file. Uses an affine matrix extracted from nibabel to perform coordinate changes.
     """
 
     nifti_data = nib.load(filepath)
-    matrix = nifti_data.affine
-    axis_labels = ['Axial', 'Coronal', 'Saggital']
+    affine_matrix = nifti_data.affine
     array = nifti_data.get_data()
 
-    # Add axis labels as necessary. Assume 4D Niftis are 3D + time, although this may not be a valid assumption.
-    if array.ndim == 4:
+    # Add axis labels as necessary. Traditionally, Niftis files have the time dimension in the fourth
+    # axis slot, and the Vector/Tensor dimension in the 5th slot, e.g. for Diffusion Tensor Imaging (DTI)
+    axis_labels = ['Axial', 'Coronal', 'Saggital']
+    if array.ndim >= 4:
         axis_labels += ['Time']
-    elif array.ndim > 4:
-        for i in xrange(4, array.ndim + 1):
+    if array.ndim >= 5:
+        axis_labels += ['Tensor']
+    if array.ndim > 6:
+        for i in xrange(5, array.ndim + 1):
             axis_labels += ['Axis' + str(i)]
 
-    # NIFTI files are stored with the array indices transposed from the usual
-    # Numpy convention of having the first dimension as the last index. But
-    # before we transpose the data, we should go through and check whether
-    # the matrix has negative diagonal elements, since for those we can flip
-    # the data array and adjust the transformation matrix - this will ensure
-    # that coordinates always increase to the right/top.
-    # Check for negative diagonal matrix elements and flip the data and adjust the
-    # transformation
-    for idx in range(array.ndim):
-        if matrix[idx, idx] < 0:
-            matrix[idx, :] = -matrix[idx, :]
-            matrix[-1, :] += array.shape[idx] * matrix[idx, :]
-            array = flip(array, idx)
-
-    # print(matrix)
-
-    # We now transpose the array so that it has the expected Numpy axis order
-    array = array.transpose()
+    # I create a "glue_affine", which is a regularized internal orientation for affine matrices in glue.
+    # This is because I found some differences from what I understand to be orientation conventions in
+    # the medical world, and what they seemed to be in glue. To make things easy, I just transfer those
+    # conventions into the same orientation every time. This solution is a bit circuitous, so this code
+    # should be revisited.
+    glue_array, glue_affine = create_glue_affine(array, affine_matrix)
 
     # Set up the coordinate object using the matrix - for this we keep the
     # matrix in the original order (as well as the axis labels)
-    coords = Coordinates4DMatrix(matrix, axis_labels)
+    coords = Coordinates4DMatrix(glue_affine, axis_labels)
 
     data = [Data(label=nifti_label(filepath))]
 
-    data[0].affine = matrix
+    data[0].affine = glue_affine
+    data[0].export_affine = affine_matrix
+    data[0].export_array = array
     data[0].coords = coords
-    data[0].add_component(component=array, label='array')
+    data[0].add_component(component=glue_array, label='array')
 
     return data

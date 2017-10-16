@@ -10,37 +10,19 @@ class Coordinates4DMatrix(Coordinates):
         # Other code to translate header into labels depending on file format.
 
         self.matrix = matrix
-        self.matrix_invert = np.linalg.inv(matrix)
+        self.matrix_invert = np.linalg.inv(self.matrix)
         self.axis_labels = axis_labels
+
 
     def axis_label(self, axis):
         return self.axis_labels[axis]
 
     def pixel2world(self, *args):
 
-        # Transformation matrix applies to first three dimensions, but not any subsequent dimensions. What to do?
-
-        # Degenerate cases with 2 (or 1?) dimensions may also be possible. Questionable what numpy size nibabel would load those in to.
-
-        # Time-scale an other measure types may be provided outside of Nifti format. Somewhere along the line, the measures for those extra dimensions will have to be defined if we want to include them.
-
-        # output_args = ()
-
-        # for arg in args:
-        #     if arg.ndim == 1:
-                
-        #     if arg.shape < 3:
-        #         output_arg = np.zeros_like(arg)
-        #     if arg.shape == 3:
-
-        #     output_args = output_args + (output_arg,)
-
-        # return output_args
-
-
         return np.matmul(self.matrix, args + (np.zeros_like(args[0]),))[:-1]
 
     def world2pixel(self, *args):
+
         return np.matmul(self.matrix_invert, args + (np.zeros_like(args[0]),))[:-1]
 
     @property
