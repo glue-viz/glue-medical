@@ -8,7 +8,7 @@ glue/tests/htmlcov
 
 # Packages/installer info
 doc/.eggs
-Glue.egg-info
+glue_medical.egg-info
 glueviz.egg-info
 dist
 

@@ -150,77 +150,77 @@ def dicom_reader(source):
                 current_dicoms = [x for _,x in sorted(zip(dicom_instances,current_dicoms))]
                 first_dicom, last_dicom = current_dicoms[0], current_dicoms[-1]
 
-                # try:
+                try:
 
-                # Extract patient position information from the DICOM header required for affine creation.
-                output_affine = np.eye(4)
-                first_image_position_patient = np.array(first_dicom.data_element('ImagePositionPatient').value).astype(float)
-                last_image_position_patient = np.array(last_dicom.data_element('ImagePositionPatient').value).astype(float)
-                image_orientation_patient = np.array(first_dicom.data_element('ImageOrientationPatient').value).astype(float)
-                pixel_spacing_patient = np.array(first_dicom.data_element('PixelSpacing').value).astype(float)
+                    # Extract patient position information from the DICOM header required for affine creation.
+                    output_affine = np.eye(4)
+                    first_image_position_patient = np.array(first_dicom.data_element('ImagePositionPatient').value).astype(float)
+                    last_image_position_patient = np.array(last_dicom.data_element('ImagePositionPatient').value).astype(float)
+                    image_orientation_patient = np.array(first_dicom.data_element('ImageOrientationPatient').value).astype(float)
+                    pixel_spacing_patient = np.array(first_dicom.data_element('PixelSpacing').value).astype(float)
 
-                # Create DICOM Space affine from DICOM header. For more information on this process, see:
-                # http://nipy.org/nibabel/dicom/dicom_orientation.html
-                output_affine[0:3, 0] = pixel_spacing_patient[0] * image_orientation_patient[0:3]
-                output_affine[0:3, 1] = pixel_spacing_patient[1] * image_orientation_patient[3:6]
-                output_affine[0:3, 2] = (first_image_position_patient - last_image_position_patient) / (1 - len(current_dicoms))
-                output_affine[0:3, 3] = first_image_position_patient
+                    # Create DICOM Space affine from DICOM header. For more information on this process, see:
+                    # http://nipy.org/nibabel/dicom/dicom_orientation.html
+                    output_affine[0:3, 0] = pixel_spacing_patient[0] * image_orientation_patient[0:3]
+                    output_affine[0:3, 1] = pixel_spacing_patient[1] * image_orientation_patient[3:6]
+                    output_affine[0:3, 2] = (first_image_position_patient - last_image_position_patient) / (1 - len(current_dicoms))
+                    output_affine[0:3, 3] = first_image_position_patient
 
-                # Transformations from DICOM affine to NIFTI affine format.
-                # DICOM data is stored in [columns, rows], rather than [rows, columns]. We first fix this.
-                rc_flip = np.eye(4)
-                rc_flip[0:2,0:2] = [[0,1],[1,0]]
-                
-                # Left and right are also flipped in DICOM data. This may be a natural consequence of the previous
-                # transformation -- not sure yet.
-                neg_flip = np.eye(4)
-                neg_flip[0:2,0:2] = [[-1,0],[0,-1]]
-                
-                # Apply transformations in (LR_FLIP * AFFINE * ROW_COLUMN_FLIP) format.
-                output_affine = np.matmul(neg_flip, np.matmul(output_affine, rc_flip))
+                    # Transformations from DICOM affine to NIFTI affine format.
+                    # DICOM data is stored in [columns, rows], rather than [rows, columns]. We first fix this.
+                    rc_flip = np.eye(4)
+                    rc_flip[0:2,0:2] = [[0,1],[1,0]]
+                    
+                    # Left and right are also flipped in DICOM data. This may be a natural consequence of the previous
+                    # transformation -- not sure yet.
+                    neg_flip = np.eye(4)
+                    neg_flip[0:2,0:2] = [[-1,0],[0,-1]]
+                    
+                    # Apply transformations in (LR_FLIP * AFFINE * ROW_COLUMN_FLIP) format.
+                    output_affine = np.matmul(neg_flip, np.matmul(output_affine, rc_flip))
 
-                # Create 3D array data from DICOMs. There are some instances I've found where corrupted data (maybe?)
-                # is not the same shape as the rest of the data. We error check slices for this reason.
-                output_shape = current_dicoms[0].pixel_array.shape
-                output_array = []
-                print(output_shape)
-                for i in xrange(len(current_dicoms)):
-                    try:
-                        output_array += [current_dicoms[i].pixel_array]
-                    except:
-                        logger.info("Error loading slice at position", i, "for UID", UID)
-                output_array = np.stack(output_array, -1)
+                    # Create 3D array data from DICOMs. There are some instances I've found where corrupted data (maybe?)
+                    # is not the same shape as the rest of the data. We error check slices for this reason.
+                    output_shape = current_dicoms[0].pixel_array.shape
+                    output_array = []
+                    print(output_shape)
+                    for i in xrange(len(current_dicoms)):
+                        try:
+                            output_array += [current_dicoms[i].pixel_array]
+                        except:
+                            logger.info("Error loading slice at position", i, "for UID", UID)
+                    output_array = np.stack(output_array, -1)
 
-                # Greater than 3D data is not supported.
-                axis_labels = ['Axial', 'Coronal', 'Saggital']
-                if output_array.ndim > 3:
-                    for i in xrange(3, output_array.ndim + 1):
-                        axis_labels += ['Axis' + str(i)]
+                    # Greater than 3D data is not supported.
+                    axis_labels = ['Axial', 'Coronal', 'Saggital']
+                    if output_array.ndim > 3:
+                        for i in xrange(3, output_array.ndim + 1):
+                            axis_labels += ['Axis' + str(i)]
 
-                # I create a "glue_affine", which is a regularized internal orientation for affine matrices in glue.
-                # This is because I found some differences from what I understand to be orientation conventions in
-                # the medical world, and what they seemed to be in glue. To make things easy, I just transfer those
-                # conventions into the same orientation every time. This solution is a bit circuitous, so this code
-                # should be revisited.
-                glue_array, glue_affine = create_glue_affine(output_array, output_affine)
+                    # I create a "glue_affine", which is a regularized internal orientation for affine matrices in glue.
+                    # This is because I found some differences from what I understand to be orientation conventions in
+                    # the medical world, and what they seemed to be in glue. To make things easy, I just transfer those
+                    # conventions into the same orientation every time. This solution is a bit circuitous, so this code
+                    # should be revisited.
+                    glue_array, glue_affine = create_glue_affine(output_array, output_affine)
 
-                # Set up the coordinate object using the matrix - for this we keep the
-                # matrix in the original order (as well as the axis labels)
-                coords = Coordinates4DMatrix(glue_affine, axis_labels)
+                    # Set up the coordinate object using the matrix - for this we keep the
+                    # matrix in the original order (as well as the axis labels)
+                    coords = Coordinates4DMatrix(glue_affine, axis_labels)
 
-                data = [Data(label=dicom_object_label(current_dicoms[0], ['SeriesDescription']))]
+                    data = [Data(label=dicom_object_label(current_dicoms[0], ['SeriesDescription']))]
 
-                data[0].affine = glue_affine
-                data[0].export_affine = output_affine
-                data[0].export_array = output_array
-                data[0].coords = coords
-                data[0].add_component(component=glue_array, label='array')
+                    data[0].affine = glue_affine
+                    data[0].export_affine = output_affine
+                    data[0].export_array = output_array
+                    data[0].coords = coords
+                    data[0].add_component(component=glue_array, label='array')
 
-                output_data += data
+                    output_data += data
 
-                # except:
+                except:
 
-                    # logger.info("Error loading DICOM series at..", UID)
+                    logger.info("Error loading DICOM series at..", UID)
 
         return output_data
 
