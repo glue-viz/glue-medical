@@ -10,17 +10,16 @@ environment:
       PYTHON_ARCH: "64" # needs to be set for CMD_IN_ENV to succeed. If a mix
                         # of 32 bit and 64 bit builds are needed, move this
                         # to the matrix section.
-      CONDA_VERSION: "4.1.11"
-      CONDA_CHANNELS: "conda-forge"
-      CONDA_DEPENDENCIES: "glueviz pytest mock requests"
+      CONDA_CHANNELS: "glueviz"
+      CONDA_DEPENDENCIES: "glue-core pytest mock requests pydicom gdcm"
 
   matrix:
       - PYTHON_VERSION: "2.7"
       - PYTHON_VERSION: "3.5"
       - PYTHON_VERSION: "2.7"
-        PIP_DEPENDENCIES: "https://github.com/glue-viz/glue/archive/master.zip"
+        CONDA_CHANNELS: "glueviz glueviz/label/dev"
       - PYTHON_VERSION: "3.5"
-        PIP_DEPENDENCIES: "https://github.com/glue-viz/glue/archive/master.zip"
+        CONDA_CHANNELS: "glueviz glueviz/label/dev"
         
 platform:
     -x64

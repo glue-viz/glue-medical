@@ -8,14 +8,13 @@ notifications:
 env:
   global:
     - SETUP_XVFB=True
-    - CONDA_CHANNELS="conda-forge"
-    - CONDA_DEPENDENCIES="glueviz pytest mock requests"
-    - PIP_DEPENDENCIES="pydicom"
+    - CONDA_CHANNELS="glueviz"
+    - CONDA_DEPENDENCIES="glue-core pytest mock requests pydicom gdcm"
   matrix:
     - PYTHON_VERSION=2.7
     - PYTHON_VERSION=3.5
-    - PYTHON_VERSION=2.7 PIP_DEPENDENCIES="pydicom https://github.com/glue-viz/glue/archive/master.zip" PIP_DEPENDENCIES_FLAGS="--upgrade --no-deps"
-    - PYTHON_VERSION=3.5 PIP_DEPENDENCIES="pydicom https://github.com/glue-viz/glue/archive/master.zip" PIP_DEPENDENCIES_FLAGS="--upgrade --no-deps"
+    - PYTHON_VERSION=2.7 CONDA_CHANNELS="glueviz glueviz/label/dev"
+    - PYTHON_VERSION=3.5 CONDA_CHANNELS="glueviz glueviz/label/dev"
 
 install:
   - git clone git://github.com/astrofrog/ci-helpers.git
