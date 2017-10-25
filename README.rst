@@ -18,8 +18,7 @@ installed. If you are using conda, you can easily install these with:
 
 ::
 
-    conda install -c conda-forge gdcm
-    pip install https://github.com/darcymason/pydicom/archive/master.zip
+    conda install -c conda-forge gdcm pydicom
 
 Installing
 ----------
