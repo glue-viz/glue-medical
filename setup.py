@@ -25,5 +25,5 @@ setup(name='glue-medical',
       packages = find_packages(),
       package_data={'glue_medical.tests':['data/*', 'data/*/*']},
       entry_points=entry_points,
-      install_requires=['numpy', 'glue-core>=0.12', 'pydicom']
+      install_requires=['numpy', 'glue-core>=0.12', 'pydicom', 'nibabel']
     )
