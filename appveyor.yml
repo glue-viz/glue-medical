@@ -14,13 +14,17 @@ environment:
       CONDA_DEPENDENCIES: "glue-core pytest mock requests pydicom gdcm"
 
   matrix:
+
       - PYTHON_VERSION: "2.7"
-      - PYTHON_VERSION: "3.5"
+        CONDA_DEPENDENCIES: "glue-core pytest mock requests pydicom gdcm sip=4.18"
       - PYTHON_VERSION: "2.7"
+        CONDA_DEPENDENCIES: "glue-core pytest mock requests pydicom gdcm sip=4.18"
         CONDA_CHANNELS: "glueviz glueviz/label/dev"
+
+      - PYTHON_VERSION: "3.5"
       - PYTHON_VERSION: "3.5"
         CONDA_CHANNELS: "glueviz glueviz/label/dev"
-        
+
 platform:
     -x64
 
@@ -35,4 +39,3 @@ build: false
 
 test_script:
   - "%CMD_IN_ENV% py.test glue_medical"
-
