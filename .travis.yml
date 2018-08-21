@@ -13,7 +13,7 @@ env:
   global:
     - SETUP_XVFB=True
     - CONDA_CHANNELS="glueviz"
-    - CONDA_DEPENDENCIES="glue-core pytest mock requests pydicom gdcm"
+    - CONDA_DEPENDENCIES="glue-core pytest mock requests pydicom gdcm nomkl"
   matrix:
     - PYTHON_VERSION=2.7
     - PYTHON_VERSION=3.5
