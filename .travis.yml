@@ -27,7 +27,7 @@ install:
   # The gdcm conda package does not work well on MacOS X with Python 3.x.
   # Unfortunately there isn't much we can do about it.
   # https://github.com/conda-forge/gdcm-feedstock/issues/8
-  - if [[ $PYTHON_VERSION == 3.* && $TRAVIS_OS_NAME == osx ]]; then conda remove gdcm; fi
+  - if [[ $PYTHON_VERSION == 3.* && $TRAVIS_OS_NAME == osx ]]; then conda remove --no-pin gdcm; fi
 
 script:
   - py.test glue_medical
