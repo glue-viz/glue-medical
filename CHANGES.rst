@@ -1,7 +1,7 @@
-0.2 (unreleased)
+0.2 (2019-07-08)
 ----------------
 
-- No changes yet.
+- Updated package layout to use setup.cfg, setuptools_scm, and tox.
 
 0.1.1 (2017-10-26)
 ------------------
