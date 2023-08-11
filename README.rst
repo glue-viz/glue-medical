@@ -1,7 +1,7 @@
 Experimental Glue medical plugin
 ================================
 
-|Build Status| |Build status|
+|Build Status|
 
 Requirements
 ------------
@@ -14,21 +14,16 @@ instructions on installing glue.
 In addition, this plugin requires the
 `GDCM <http://gdcm.sourceforge.net/>`__ and
 `pydicom <http://pydicom.readthedocs.io/en/stable/>`__ packages to be
-installed. If you are using conda, you can easily install these with:
-
-::
+installed. If you are using conda, you can easily install these with::
 
     conda install -c conda-forge gdcm pydicom
 
 Installing
 ----------
 
-To install the latest developer version of the plugin from the git
-repository, you can do:
+To install the latest version of this plugin, you can do::
 
-::
-
-    pip install https://github.com/glue-viz/glue-medical/archive/master.zip
+    pip install glue-medical
 
 This will auto-register the plugin with Glue.
 
@@ -37,15 +32,11 @@ Using
 
 At the moment, this plugin provides a reader for DICOM files. You can
 give glue either a DICOM file or a directory containing DICOM files. For
-example, you can start glue using:
-
-::
+example, you can start glue using::
 
     glue mydata.dcm
 
-or
-
-::
+or::
 
     glue directory_with_dicom_files
 
@@ -61,16 +52,12 @@ behavior.
 Testing
 -------
 
-To run the tests, do:
+To run the tests, do::
 
-::
-
-    py.test glue_medical
+    pytest glue_medical
 
 at the root of the repository. This requires the
 `pytest <http://pytest.org>`__ module to be installed.
 
-.. |Build Status| image:: https://travis-ci.org/glue-viz/glue-medical.svg
-   :target: https://travis-ci.org/glue-viz/glue-medical?branch=master
-.. |Build status| image:: https://ci.appveyor.com/api/projects/status/2yu53cb15ifilio6/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/glue-viz/glue-medical/branch/master
+.. |Build Status| image:: https://github.com/glue-viz/glue-medical/actions/workflows/ci_workflows.yml/badge.svg
+   :target: https://github.com/glue-viz/glue-medical/actions/workflows/ci_workflows.yml
