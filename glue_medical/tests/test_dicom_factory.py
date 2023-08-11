@@ -1,7 +1,4 @@
 import os
-import glob
-import shutil
-import zipfile
 
 from ..dicom_factory import is_dicom, dicom_reader
 

@@ -49,7 +49,6 @@ def dicom_label(filename):
     return label
 
 
-
 def is_dicom(source):
     """
     Determine if the source is either a DICOM file or a directory that
